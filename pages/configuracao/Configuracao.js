@@ -41,7 +41,7 @@ const ConfigScreen = () => {
         return;
       }
 
-      const response = await fetch('http://192.168.0.113:8080/usuario/atualizar/' + userId, {
+      const response = await fetch('http://127.0.0.1:8080/usuario/atualizar/' + userId, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

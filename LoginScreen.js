@@ -12,7 +12,6 @@ const LoginScreen = ({ navigation }) => {
   const storeUserId = async (userId) => {
     try {
       await AsyncStorage.setItem('id', userId.toString());
-      Alert.alert("Salvar ID do Usuário realizado")
     } catch (error) {
       console.error('Erro ao salvar o ID do usuário', error);
     }
@@ -28,7 +27,7 @@ const LoginScreen = ({ navigation }) => {
 
     try {
       // API Teste. Substituir pela API-Andrews
-      const response = await fetch('http://192.168.0.113:8080/usuario/logar', {
+      const response = await fetch('http://127.0.0.1:8080/usuario/logar', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
