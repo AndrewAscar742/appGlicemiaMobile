@@ -35,7 +35,7 @@ const Home = () => {
   const getData = async () => {
     const userId = await getUserId();
     try {
-      const response = await fetch("http://127.0.0.1:8080/glicemia/user/" + userId);
+      const response = await fetch("http://192.168.0.113:8080/glicemia/user/" + userId);
 
       const result = await response.json();
       if (result.length > 0) {
