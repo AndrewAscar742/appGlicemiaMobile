@@ -1,170 +1,180 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView} from "react-native";
+import CheckBox from 'react-native-check-box';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ReportScreen = ({ navigation }) => { // Adicione a prop navigation aqui
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [reportType, setReportType] = useState('');
-  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
-
-  const showStartDate = () => setShowStartDatePicker(true);
-  const showEndDate = () => setShowEndDatePicker(true);
-
-  const handleStartDateChange = (event, selectedDate) => {
-    setShowStartDatePicker(false);
-    setStartDate(selectedDate || startDate);
-  };
-
-  const handleEndDateChange = (event, selectedDate) => {
-    setShowEndDatePicker(false);
-    setEndDate(selectedDate || endDate);
-  };
-
-  const generateReport = () => {
-    console.log(`Gerando relatório: ${reportType} de ${startDate.toLocaleDateString()} a ${endDate.toLocaleDateString()}`);
-    navigation.navigate('ReportView'); // Agora a navigation está disponível aqui
-  };
+  const [isSugarChecked, setSugarChecked] = useState(false);
+  const [isPressureChecked, setPressureChecked] = useState(false);
+  const [isMedicationChecked, setMedicationChecked] = useState(false);
 
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: '#fff' }]}>Intervalo de tempo</Text>
-        <View style={styles.dateContainer}>
-          <TouchableOpacity onPress={showStartDate}>
-            <Text style={[styles.dateSeparator, { color: '#fff' }]}>De: {startDate.toLocaleDateString()}</Text>
-          </TouchableOpacity>
-          {showStartDatePicker && (
-            <DateTimePicker
-              value={startDate}
-              mode="date"
-              display="default"
-              onChange={handleStartDateChange}
-            />
-          )}
-          <TouchableOpacity onPress={showEndDate}>
-            <Text style={[styles.dateSeparator, { color: '#fff' }]}>Para: {endDate.toLocaleDateString()}</Text>
-          </TouchableOpacity>
-          {showEndDatePicker && (
-            <DateTimePicker
-              value={endDate}
-              mode="date"
-              display="default"
-              onChange={handleEndDateChange}
-            />
-          )}
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <Text style={styles.header}>Intervalo de tempo</Text>
+        <View style={styles.dateRange}>
+          <TextInput
+            style={styles.dateInput}
+            placeholder="De --/--/----"
+            placeholderTextColor="#aaa"
+          />
+          <TextInput
+            style={styles.dateInput}
+            placeholder="Para --/--/----"
+            placeholderTextColor="#aaa"
+          />
         </View>
-      </View>
+        <View style={styles.additionalInfo}>
+          <Text style={styles.sectionTitle}>Informações adicionais</Text>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              isChecked={isMedicationChecked} // Substitui "value" por "isChecked"
+              onClick={() => setMedicationChecked(!isMedicationChecked)} // Substitui "onValueChange" por "onClick"
+              style={styles.checkbox}
+            />
 
-      <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: '#fff' }]}>Tipo de relatório</Text>
-        <View style={styles.radioContainer}>
-          <Pressable style={styles.radioButton} onPress={() => setReportType('acucarNoSangue')}>
-            <View style={styles.radioCircle}>
-              {reportType === 'acucarNoSangue' && <View style={styles.selectedRb} />}
-            </View>
-            <Text style={[styles.radioText, { color: '#fff' }]}>Açúcar no sangue</Text>
-            <Icon name="tint" size={20} color="#fff" style={styles.iconStyle} />
-          </Pressable>
-          <Pressable style={styles.radioButton} onPress={() => setReportType('pressaoSanguinea')}>
-            <View style={styles.radioCircle}>
-              {reportType === 'pressaoSanguinea' && <View style={styles.selectedRb} />}
-            </View>
-            <Text style={[styles.radioText, { color: '#fff' }]}>Pressão Sanguínea</Text>
-            <Icon name="heartbeat" size={20} color="#fff" style={styles.iconStyle} />
-          </Pressable>
-          <Pressable style={styles.radioButton} onPress={() => setReportType('medicamento')}>
-            <View style={styles.radioCircle}>
-              {reportType === 'medicamento' && <View style={styles.selectedRb} />}
-            </View>
-            <Text style={[styles.radioText, { color: '#fff' }]}>Medicamento</Text>
-            <Icon name="medkit" size={20} color="#fff" style={styles.iconStyle} />
-          </Pressable>
+            <Text style={styles.label}>Açúcar no sangue</Text>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              isChecked={isSugarChecked} // Substitui "value" por "isChecked"
+              onClick={() => setSugarChecked(!isSugarChecked)} // Substitui "onValueChange" por "onClick"
+              style={styles.checkbox}
+            />
+
+            <Text style={styles.label}>Pressão Sanguínea</Text>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              isChecked={isPressureChecked} // Substitui "value" por "isChecked"
+              onClick={() => setPressureChecked(!isPressureChecked)} // Substitui "onValueChange" por "onClick"
+              style={styles.checkbox}
+            />
+
+            <Text style={styles.label}>Medicamento</Text>
+          </View>
         </View>
-      </View>
+        <TouchableOpacity style={styles.generateButton} onPress={() => navigation.navigate('ReportView')}>
+          <Text style={styles.buttonText}>Gerar Relatório</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={generateReport}>
-        <Text style={styles.buttonText}>GERAR RELATÓRIO</Text>
-      </TouchableOpacity>
+        <View style={styles.navBar}>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Dashboard')}>
+            <Icon name="home" size={24} color="#007bff" />
+            <Text style={styles.navButtonText}>Dashboard</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Glicemia')}>
+            <Icon name="plus" size={24} color="#007bff" />
+            <Text style={styles.navButtonText}>+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Configuração')}>
+            <Icon name="user" size={24} color="#007bff" />
+            <Text style={styles.navButtonText}>Configuração</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
     </View>
   );
+
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fefefe",
+    alignItems: "center",
+    padding: 0,
   },
-  section: {
-    backgroundColor: '#FF9999',
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#333",
+  },
+  dateRange: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    width: "100%",
+  },
+  dateInput: {
+    flex: 1,
+    marginHorizontal: 5,
     padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    fontSize: 16,
+    color: "#333",
+    backgroundColor: "#fff",
+  },
+  additionalInfo: {
+    backgroundColor: "#f0f0f0",
+    padding: 20,
     borderRadius: 8,
+    width: "100%",
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 10,
-    color: '#000',
-  },
-  dateContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-  },
-  dateSeparator: {
     fontSize: 16,
-    marginHorizontal: 10,
-    color: '#000',
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#555",
   },
-  radioContainer: {
-    marginVertical: 20,
+  checkboxContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
   },
-  radioButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-    justifyContent: 'space-between',
-  },
-  radioCircle: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
+  checkbox: {
     marginRight: 10,
   },
-  selectedRb: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#000',
+  label: {
+    fontSize: 14,
+    color: "#333",
   },
-  radioText: {
-    fontSize: 16,
-    color: '#000',
-    flex: 1,
-  },
-  iconStyle: {
-    marginLeft: 10,
-  },
-  button: {
-    backgroundColor: '#FF9999',
-    padding: 15,
-    alignItems: 'center',
-    borderRadius: 8,
+  generateButton: {
+    backgroundColor: "#333",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#fff',
+    color: "#fff",
+  },
+
+  navBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    padding: 10,
+    backgroundColor: '#fff',
+    borderTopColor: '#ccc',
+    borderTopWidth: 1,
+    position: 'absolute',
+    bottom: 0,
+  },
+  navButton: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 10,
+  },
+  navButtonText: {
+    color: '#007bff',
+    marginTop: 5,
   },
 });
+
 
 export default ReportScreen;
